@@ -94,7 +94,7 @@ app.post('/api/rooms/:roomId/join', (req, res) => {
   const newPlayer = { id: playerId, name: playerName, isHost: false };
   room.players.push(newPlayer);
 
-  // Notify all players in the room
+  // Notify all players in the room about the new player
   io.to(roomId).emit('playerJoined', { player: newPlayer, room });
 
   res.json({ 
@@ -116,6 +116,13 @@ io.on('connection', (socket) => {
     socketToPlayer.set(socket.id, { roomId, playerId, playerName });
     
     console.log(`Socket ${socket.id} joined room ${roomId} as ${playerName}`);
+    
+    // Send room state to the joining player
+    const room = rooms.get(roomId);
+    if (room) {
+      socket.emit('roomJoined', { room });
+      console.log(`Sent roomJoined event to ${playerName} for room ${roomId}`);
+    }
   });
 
   socket.on('leaveRoom', (roomId) => {
