@@ -38,6 +38,13 @@ app.get('/api/rooms', (req, res) => {
       playerCount: room.players.length
     }));
   
+  console.log(`GET /api/rooms - Returning ${availableRooms.length} available rooms`);
+  if (availableRooms.length > 0) {
+    availableRooms.forEach(room => {
+      console.log(`  - Room ${room.id}: ${room.playerCount}/2 players, host: ${room.host}`);
+    });
+  }
+  
   res.json(availableRooms);
 });
 
@@ -125,7 +132,85 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('leaveRoom', (roomId) => {
+  socket.on('leaveRoom', (data) => {
+    console.log(`leaveRoom event received with data:`, data);
+    console.log(`Socket ${socket.id} leaveRoom data type:`, typeof data);
+    
+    // Handle both old format (just roomId) and new format (object)
+    let roomId, playerId, playerName;
+    
+    if (typeof data === 'string') {
+      // Old format: just roomId string
+      roomId = data;
+      const playerInfo = socketToPlayer.get(socket.id);
+      console.log(`Old format - playerInfo from socketToPlayer:`, playerInfo);
+      if (playerInfo) {
+        playerId = playerInfo.playerId;
+        playerName = playerInfo.playerName;
+      }
+    } else {
+      // New format: { roomId, playerId, playerName }
+      ({ roomId, playerId, playerName } = data);
+      console.log(`New format - extracted:`, { roomId, playerId, playerName });
+    }
+    
+    console.log(`Final values: roomId=${roomId}, playerId=${playerId}, playerName=${playerName}`);
+    
+    if (roomId && playerId) {
+      console.log(`Received leaveRoom event from ${playerName} for room ${roomId}`);
+      
+      // Remove player from room
+      const room = rooms.get(roomId);
+      if (room) {
+        console.log(`Room found:`, room);
+        const playerIndex = room.players.findIndex(p => p.id === playerId);
+        console.log(`Player index in room:`, playerIndex);
+        if (playerIndex !== -1) {
+          const removedPlayer = room.players.splice(playerIndex, 1)[0];
+          console.log(`Removed player ${removedPlayer.name} from room ${roomId} (manual leave)`);
+          
+          // Notify other players in the room
+          socket.to(roomId).emit('playerLeft', { 
+            playerId, 
+            playerName: removedPlayer.name, 
+            remainingPlayers: room.players.length 
+          });
+
+          // Handle host transfer if the host left
+          if (removedPlayer.isHost && room.players.length > 0) {
+            const newHost = room.players[0];
+            newHost.isHost = true;
+            room.host = newHost.name;
+            console.log(`Transferred host to ${newHost.name} in room ${roomId}`);
+            
+            // Notify players about new host
+            io.to(roomId).emit('hostChanged', { 
+              newHostId: newHost.id, 
+              newHostName: newHost.name 
+            });
+          }
+
+          // Delete room if it's empty
+          if (room.players.length === 0) {
+            rooms.delete(roomId);
+            console.log(`Deleted empty room ${roomId}`);
+          } else {
+            // Update room status if needed
+            if (room.status === 'playing' && room.players.length < 2) {
+              room.status = 'waiting';
+              console.log(`Room ${roomId} status changed to waiting (not enough players)`);
+            }
+          }
+        } else {
+          console.log(`Player ${playerName} not found in room ${roomId}`);
+        }
+      } else {
+        console.log(`Room ${roomId} not found for leaving player ${playerName}`);
+      }
+    } else {
+      console.log(`Missing roomId or playerId - roomId: ${roomId}, playerId: ${playerId}`);
+    }
+    
     socket.leave(roomId);
     socketToPlayer.delete(socket.id);
     console.log(`Socket ${socket.id} left room ${roomId}`);
@@ -234,6 +319,12 @@ function getRoomInfo(roomId) {
 // Debug endpoint to see all rooms (remove in production)
 app.get('/api/debug/rooms', (req, res) => {
   const allRooms = Array.from(rooms.keys()).map(roomId => getRoomInfo(roomId));
+  console.log(`DEBUG: Total rooms in memory: ${rooms.size}`);
+  allRooms.forEach(room => {
+    if (room) {
+      console.log(`  - Room ${room.id}: ${room.playerCount}/2 players, status: ${room.status}, host: ${room.host}`);
+    }
+  });
   res.json({
     totalRooms: rooms.size,
     rooms: allRooms,
