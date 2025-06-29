@@ -55,18 +55,25 @@ app.post('/api/rooms', (req, res) => {
     return res.status(400).json({ error: 'Player name is required' });
   }
 
+  // Check if player name is valid (not empty, reasonable length, etc.)
+  if (playerName.trim().length === 0 || playerName.length > 20) {
+    return res.status(400).json({ error: 'Player name must be between 1 and 20 characters' });
+  }
+
   const roomId = generateRoomId();
   const playerId = generateUserId();
   const room = {
     id: roomId,
     host: playerName,
     status: 'waiting',
-    players: [{ id: playerId, name: playerName, isHost: true }],
+    players: [{ id: playerId, name: playerName, isHost: true, gamePlayerId: 'player1' }],
     createdAt: new Date(),
     gameState: null
   };
 
   rooms.set(roomId, room);
+  
+  console.log(`ROOM CREATED: Player ${playerName} created room ${roomId} as ${room.players[0].gamePlayerId}`);
   
   res.json({
     id: roomId,
@@ -97,9 +104,21 @@ app.post('/api/rooms/:roomId/join', (req, res) => {
     return res.status(400).json({ error: 'Room is full' });
   }
 
+  // Check if player name already exists in the room
+  const existingPlayer = room.players.find(p => p.name === playerName);
+  if (existingPlayer) {
+    return res.status(400).json({ error: 'A player with this name already exists in the room' });
+  }
+
   const playerId = generateUserId();
-  const newPlayer = { id: playerId, name: playerName, isHost: false };
+  const newPlayer = { id: playerId, name: playerName, isHost: false, gamePlayerId: 'player2' };
   room.players.push(newPlayer);
+
+  console.log(`API JOIN: Player ${playerName} joined room ${roomId} as ${newPlayer.gamePlayerId}`);
+  console.log(`Room ${roomId} now has ${room.players.length} players:`);
+  room.players.forEach(player => {
+    console.log(`  - ${player.name} (${player.gamePlayerId}) - Host: ${player.isHost}`);
+  });
 
   // Notify all players in the room about the new player
   io.to(roomId).emit('playerJoined', { player: newPlayer, room });
@@ -122,11 +141,16 @@ io.on('connection', (socket) => {
     // Track this socket's player info
     socketToPlayer.set(socket.id, { roomId, playerId, playerName });
     
-    console.log(`Socket ${socket.id} joined room ${roomId} as ${playerName}`);
+    console.log(`SOCKET JOIN: Socket ${socket.id} joined room ${roomId} as ${playerName} (playerId: ${playerId})`);
     
     // Send room state to the joining player
     const room = rooms.get(roomId);
     if (room) {
+      console.log(`Room ${roomId} current state:`);
+      room.players.forEach(player => {
+        console.log(`  - ${player.name} (${player.gamePlayerId}) - ID: ${player.id} - Host: ${player.isHost}`);
+      });
+      
       socket.emit('roomJoined', { room });
       console.log(`Sent roomJoined event to ${playerName} for room ${roomId}`);
     }
@@ -180,6 +204,7 @@ io.on('connection', (socket) => {
           if (removedPlayer.isHost && room.players.length > 0) {
             const newHost = room.players[0];
             newHost.isHost = true;
+            newHost.gamePlayerId = 'player1'; // New host becomes player1
             room.host = newHost.name;
             console.log(`Transferred host to ${newHost.name} in room ${roomId}`);
             
@@ -220,6 +245,80 @@ io.on('connection', (socket) => {
     const { roomId, action, playerId } = data;
     // Relay game actions to other players in the room
     socket.to(roomId).emit('gameAction', { action, playerId });
+  });
+
+  socket.on('playerSubmitted', (data) => {
+    const { roomId, playerId, playerName, gamePlayerId } = data;
+    
+    console.log(`Player ${playerName} (${gamePlayerId}) submitted in room ${roomId} from socket ${socket.id}`);
+    
+    // Get the room to check player count
+    const room = rooms.get(roomId);
+    if (room) {
+      console.log(`Room ${roomId} has ${room.players.length} players`);
+      console.log(`Relaying playerSubmitted event to other players in room ${roomId}`);
+      
+      // Log all players in the room for debugging
+      room.players.forEach(player => {
+        console.log(`  - Player: ${player.name} (${player.gamePlayerId})`);
+      });
+      
+      // Track submissions in the room
+      if (!room.submissions) {
+        room.submissions = new Set();
+      }
+      
+      room.submissions.add(gamePlayerId);
+      console.log(`Submissions tracked for room ${roomId}:`, Array.from(room.submissions));
+      
+      // Check if both players have submitted
+      if (room.submissions.size === 2) {
+        console.log(`Both players have submitted in room ${roomId}! Triggering replay phase...`);
+        
+        // Emit replay phase event to all players in the room
+        io.to(roomId).emit('replayPhase', {
+          roomId,
+          message: 'Both players have submitted! Starting replay phase...'
+        });
+        
+        // Reset submissions for next round
+        room.submissions.clear();
+        console.log(`Reset submissions tracking for room ${roomId}`);
+      }
+    } else {
+      console.log(`Room ${roomId} not found for playerSubmitted event`);
+    }
+    
+    // Relay the submission event to all other players in the room (excluding the sender)
+    socket.to(roomId).emit('playerSubmitted', data);
+  });
+
+  socket.on('gameState', (data) => {
+    const { roomId, playerId, playerName, gamePlayerId, echoes } = data;
+    
+    console.log(`=== GAME STATE EVENT RECEIVED ===`);
+    console.log(`Full data received:`, JSON.stringify(data, null, 2));
+    console.log(`Player ${playerName} (${gamePlayerId}) sending game state in room ${roomId} from socket ${socket.id}`);
+    console.log(`Echoes count: ${echoes ? echoes.length : 0}`);
+    console.log(`Echoes data:`, echoes);
+    console.log(`================================`);
+    
+    // Get the room to verify it exists
+    const room = rooms.get(roomId);
+    if (room) {
+      console.log(`Relaying gameState as opponentEchoes to other players in room ${roomId}`);
+      
+      // Relay the game state to the other player as opponentEchoes
+      socket.to(roomId).emit('opponentEchoes', {
+        roomId,
+        playerId,
+        playerName,
+        gamePlayerId,
+        echoes
+      });
+    } else {
+      console.log(`Room ${roomId} not found for gameState event`);
+    }
   });
 
   socket.on('chatMessage', (data) => {
@@ -264,6 +363,7 @@ io.on('connection', (socket) => {
       if (removedPlayer.isHost && room.players.length > 0) {
         const newHost = room.players[0];
         newHost.isHost = true;
+        newHost.gamePlayerId = 'player1'; // New host becomes player1
         room.host = newHost.name;
         console.log(`Transferred host to ${newHost.name} in room ${roomId}`);
         
@@ -311,7 +411,7 @@ function getRoomInfo(roomId) {
     host: room.host,
     status: room.status,
     playerCount: room.players.length,
-    players: room.players.map(p => ({ id: p.id, name: p.name, isHost: p.isHost })),
+    players: room.players.map(p => ({ id: p.id, name: p.name, isHost: p.isHost, gamePlayerId: p.gamePlayerId })),
     createdAt: room.createdAt
   };
 }
@@ -323,12 +423,98 @@ app.get('/api/debug/rooms', (req, res) => {
   allRooms.forEach(room => {
     if (room) {
       console.log(`  - Room ${room.id}: ${room.playerCount}/2 players, status: ${room.status}, host: ${room.host}`);
+      room.players.forEach(player => {
+        console.log(`    * ${player.name} (${player.gamePlayerId}) - Host: ${player.isHost}`);
+      });
+      
+      // Show submission status if available
+      const actualRoom = rooms.get(room.id);
+      if (actualRoom && actualRoom.submissions) {
+        console.log(`    * Submissions: ${Array.from(actualRoom.submissions).join(', ')}`);
+      }
     }
   });
   res.json({
     totalRooms: rooms.size,
-    rooms: allRooms,
+    rooms: allRooms.map(room => {
+      if (room) {
+        const actualRoom = rooms.get(room.id);
+        return {
+          ...room,
+          submissions: actualRoom && actualRoom.submissions ? Array.from(actualRoom.submissions) : []
+        };
+      }
+      return room;
+    }),
     activeSockets: socketToPlayer.size
+  });
+});
+
+// Debug endpoint to check submission status for a specific room
+app.get('/api/debug/rooms/:roomId/submissions', (req, res) => {
+  const { roomId } = req.params;
+  const room = rooms.get(roomId);
+  
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+  
+  res.json({
+    roomId,
+    submissions: room.submissions ? Array.from(room.submissions) : [],
+    submissionCount: room.submissions ? room.submissions.size : 0,
+    playerCount: room.players.length,
+    players: room.players.map(p => ({ name: p.name, gamePlayerId: p.gamePlayerId }))
+  });
+});
+
+// Manual trigger for replay phase (for testing)
+app.post('/api/debug/rooms/:roomId/trigger-replay', (req, res) => {
+  const { roomId } = req.params;
+  const room = rooms.get(roomId);
+  
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+  
+  console.log(`Manually triggering replay phase for room ${roomId}`);
+  
+  // Emit replay phase event to all players in the room
+  io.to(roomId).emit('replayPhase', {
+    roomId,
+    message: 'Replay phase manually triggered for testing!'
+  });
+  
+  // Reset submissions
+  if (room.submissions) {
+    room.submissions.clear();
+  }
+  
+  res.json({ 
+    success: true, 
+    message: 'Replay phase triggered',
+    roomId 
+  });
+});
+
+// Reset submissions for a room (for testing)
+app.post('/api/debug/rooms/:roomId/reset-submissions', (req, res) => {
+  const { roomId } = req.params;
+  const room = rooms.get(roomId);
+  
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+  
+  if (room.submissions) {
+    room.submissions.clear();
+    console.log(`Reset submissions for room ${roomId}`);
+  }
+  
+  res.json({ 
+    success: true, 
+    message: 'Submissions reset',
+    roomId 
   });
 });
 
