@@ -10,7 +10,9 @@ const server = http.createServer(app);
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
-  'https://echoes.narju.net'
+  'https://echoes.narju.net',
+  'http://echoes.narju.net',
+  'https://echoesgame.netlify.app'
 ];
 
 const corsOptions = {
