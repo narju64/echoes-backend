@@ -49,6 +49,9 @@ const rooms = new Map();
 const users = new Map();
 const socketToPlayer = new Map(); // Track which socket belongs to which player
 
+// Track disconnect timers for players
+const disconnectTimers = new Map();
+
 // Basic health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Echoes backend is running' });
@@ -170,6 +173,15 @@ io.on('connection', (socket) => {
     
     console.log(`SOCKET JOIN: Socket ${socket.id} joined room ${roomId} as ${playerName} (playerId: ${playerId})`);
     
+    // If player is reconnecting within grace period, cancel timer
+    if (disconnectTimers.has(playerId)) {
+      clearTimeout(disconnectTimers.get(playerId));
+      disconnectTimers.delete(playerId);
+      // Notify other player of reconnection
+      socket.to(roomId).emit('opponentReconnected', { playerId, playerName });
+      console.log(`Player ${playerName} (playerId: ${playerId}) reconnected to room ${roomId}`);
+    }
+
     // Send room state to the joining player
     const room = rooms.get(roomId);
     if (room) {
@@ -179,6 +191,10 @@ io.on('connection', (socket) => {
       });
       
       socket.emit('roomJoined', { room });
+      // Send latest game state if available
+      if (room.gameState) {
+        socket.emit('gameState', room.gameState);
+      }
       console.log(`Sent roomJoined event to ${playerName} for room ${roomId}`);
     }
   });
@@ -373,48 +389,43 @@ io.on('connection', (socket) => {
       return;
     }
 
-    // Remove player from room
-    const playerIndex = room.players.findIndex(p => p.id === playerId);
-    if (playerIndex !== -1) {
-      const removedPlayer = room.players.splice(playerIndex, 1)[0];
-      console.log(`Removed player ${playerName} from room ${roomId}`);
-      
-      // Notify other players in the room
-      socket.to(roomId).emit('playerLeft', { 
-        playerId, 
-        playerName, 
-        remainingPlayers: room.players.length 
-      });
-
-      // Handle host transfer if the host left
-      if (removedPlayer.isHost && room.players.length > 0) {
-        const newHost = room.players[0];
-        newHost.isHost = true;
-        newHost.gamePlayerId = 'player1'; // New host becomes player1
-        room.host = newHost.name;
-        console.log(`Transferred host to ${newHost.name} in room ${roomId}`);
-        
-        // Notify players about new host
-        io.to(roomId).emit('hostChanged', { 
-          newHostId: newHost.id, 
-          newHostName: newHost.name 
+    // Notify other player of disconnect
+    socket.to(roomId).emit('opponentDisconnected', { playerId, playerName });
+    // Start a 30s timer before removing the player
+    const timer = setTimeout(() => {
+      // Remove player from room and clean up (existing logic)
+      const playerIndex = room.players.findIndex(p => p.id === playerId);
+      if (playerIndex !== -1) {
+        const removedPlayer = room.players.splice(playerIndex, 1)[0];
+        console.log(`Removed player ${removedPlayer.name} from room ${roomId} (after grace period)`);
+        socket.to(roomId).emit('playerLeft', {
+          playerId,
+          playerName: removedPlayer.name,
+          remainingPlayers: room.players.length
         });
-      }
-
-      // Delete room if it's empty
-      if (room.players.length === 0) {
-        rooms.delete(roomId);
-        console.log(`Deleted empty room ${roomId}`);
-      } else {
-        // Update room status if needed
-        if (room.status === 'playing' && room.players.length < 2) {
-          room.status = 'waiting';
-          console.log(`Room ${roomId} status changed to waiting (not enough players)`);
+        if (removedPlayer.isHost && room.players.length > 0) {
+          const newHost = room.players[0];
+          newHost.isHost = true;
+          newHost.gamePlayerId = 'player1';
+          room.host = newHost.name;
+          io.to(roomId).emit('hostChanged', {
+            newHostId: newHost.id,
+            newHostName: newHost.name
+          });
+        }
+        if (room.players.length === 0) {
+          rooms.delete(roomId);
+          console.log(`Deleted empty room ${roomId}`);
+        } else {
+          if (room.status === 'playing' && room.players.length < 2) {
+            room.status = 'waiting';
+            console.log(`Room ${roomId} status changed to waiting (not enough players)`);
+          }
         }
       }
-    }
-
-    // Clean up socket tracking
+      disconnectTimers.delete(playerId);
+    }, 30000); // 30 seconds
+    disconnectTimers.set(playerId, timer);
     socketToPlayer.delete(socket.id);
   });
 });
