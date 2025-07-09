@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+const fs = require('fs').promises;
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -158,6 +160,191 @@ app.post('/api/rooms/:roomId/join', (req, res) => {
     room,
     playerId: playerId // Return player ID for socket tracking
   });
+});
+
+// Match logging API
+app.post('/api/matches', async (req, res) => {
+  try {
+    const matchData = req.body;
+    
+    // Validate required fields
+    if (!matchData.matchId) {
+      return res.status(400).json({ error: 'matchId is required' });
+    }
+    
+    if (!matchData.startTime || !matchData.endTime) {
+      return res.status(400).json({ error: 'startTime and endTime are required' });
+    }
+    
+    if (!matchData.players || !Array.isArray(matchData.players) || matchData.players.length === 0) {
+      return res.status(400).json({ error: 'players array is required and must not be empty' });
+    }
+    
+    if (!matchData.events || !Array.isArray(matchData.events)) {
+      return res.status(400).json({ error: 'events array is required' });
+    }
+    
+    // Validate timestamps
+    if (typeof matchData.startTime !== 'number' || typeof matchData.endTime !== 'number') {
+      return res.status(400).json({ error: 'startTime and endTime must be numbers' });
+    }
+    
+    if (matchData.startTime >= matchData.endTime) {
+      return res.status(400).json({ error: 'startTime must be before endTime' });
+    }
+    
+    // Create matches directory if it doesn't exist
+    const matchesDir = path.join(__dirname, 'matches');
+    try {
+      await fs.access(matchesDir);
+    } catch (error) {
+      await fs.mkdir(matchesDir, { recursive: true });
+      console.log(`Created matches directory: ${matchesDir}`);
+    }
+    
+    // Create filename from matchId
+    const filename = `${matchData.matchId}.json`;
+    const filepath = path.join(matchesDir, filename);
+    
+    // Check if file already exists (shouldn't happen with unique matchIds)
+    try {
+      await fs.access(filepath);
+      console.log(`Warning: Match file already exists: ${filename}`);
+    } catch (error) {
+      // File doesn't exist, which is expected
+    }
+    
+    // Add server timestamp for when the match was logged
+    const matchDataWithTimestamp = {
+      ...matchData,
+      loggedAt: Date.now(),
+      serverVersion: '1.0.0' // For future compatibility
+    };
+    
+    // Write match data to file
+    await fs.writeFile(filepath, JSON.stringify(matchDataWithTimestamp, null, 2));
+    
+    console.log(`✅ Match logged successfully: ${filename}`);
+    console.log(`   - Duration: ${matchData.duration || 'N/A'}ms`);
+    console.log(`   - Players: ${matchData.players.join(', ')}`);
+    console.log(`   - Events: ${matchData.events.length}`);
+    console.log(`   - Winner: ${matchData.winner || 'N/A'}`);
+    
+    res.json({
+      success: true,
+      matchId: matchData.matchId,
+      message: 'Match logged successfully',
+      filepath: filename
+    });
+    
+  } catch (error) {
+    console.error('❌ Error logging match:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to log match',
+      message: error.message
+    });
+  }
+});
+
+// Get match data by matchId
+app.get('/api/matches/:matchId', async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    
+    if (!matchId) {
+      return res.status(400).json({ error: 'matchId is required' });
+    }
+    
+    const matchesDir = path.join(__dirname, 'matches');
+    const filepath = path.join(matchesDir, `${matchId}.json`);
+    
+    try {
+      const matchData = await fs.readFile(filepath, 'utf8');
+      const parsedData = JSON.parse(matchData);
+      
+      res.json({
+        success: true,
+        match: parsedData
+      });
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({ error: 'Match not found' });
+      }
+      throw error;
+    }
+    
+  } catch (error) {
+    console.error('❌ Error retrieving match:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve match',
+      message: error.message
+    });
+  }
+});
+
+// Get list of all matches (for debugging/analysis)
+app.get('/api/matches', async (req, res) => {
+  try {
+    const matchesDir = path.join(__dirname, 'matches');
+    
+    try {
+      await fs.access(matchesDir);
+    } catch (error) {
+      // Matches directory doesn't exist yet, return empty list
+      return res.json({
+        success: true,
+        matches: [],
+        total: 0
+      });
+    }
+    
+    const files = await fs.readdir(matchesDir);
+    const matchFiles = files.filter(file => file.endsWith('.json'));
+    
+    const matches = [];
+    for (const file of matchFiles) {
+      try {
+        const filepath = path.join(matchesDir, file);
+        const matchData = await fs.readFile(filepath, 'utf8');
+        const parsedData = JSON.parse(matchData);
+        
+        // Return summary data only
+        matches.push({
+          matchId: parsedData.matchId,
+          startTime: parsedData.startTime,
+          endTime: parsedData.endTime,
+          duration: parsedData.duration,
+          players: parsedData.players,
+          winner: parsedData.winner,
+          winCondition: parsedData.winCondition,
+          eventCount: parsedData.events ? parsedData.events.length : 0,
+          loggedAt: parsedData.loggedAt
+        });
+      } catch (error) {
+        console.error(`Error reading match file ${file}:`, error);
+        // Continue with other files
+      }
+    }
+    
+    // Sort by start time (newest first)
+    matches.sort((a, b) => b.startTime - a.startTime);
+    
+    res.json({
+      success: true,
+      matches,
+      total: matches.length
+    });
+    
+  } catch (error) {
+    console.error('❌ Error retrieving matches list:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve matches list',
+      message: error.message
+    });
+  }
 });
 
 // Socket.IO connection handling
