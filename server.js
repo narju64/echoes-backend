@@ -376,6 +376,7 @@ app.get('/api/matches', async (req, res) => {
           endTime: parsedData.endTime,
           duration: parsedData.duration,
           players: parsedData.players,
+          gameMode: parsedData.gameMode,
           winner: parsedData.winner,
           winCondition: parsedData.winCondition,
           eventCount: parsedData.events ? parsedData.events.length : 0,
