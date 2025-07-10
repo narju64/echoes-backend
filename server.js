@@ -12,6 +12,9 @@ const server = http.createServer(app);
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:4173',
+  'http://localhost:8080',
   'https://echoes.narju.net',
   'http://echoes.narju.net',
   'https://echoesgame.netlify.app'
@@ -23,10 +26,13 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ["GET", "POST"]
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 
 const io = socketIo(server, {
@@ -804,10 +810,31 @@ app.post('/api/debug/rooms/:roomId/reset-submissions', (req, res) => {
   });
 });
 
+// Global error handler to ensure JSON responses
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({
+    success: false,
+    error: 'Internal server error',
+    message: err.message
+  });
+});
+
+// 404 handler for unmatched routes
+app.use('*', (req, res) => {
+  console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    success: false,
+    error: 'Route not found',
+    message: `No route found for ${req.method} ${req.originalUrl}`
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`🚀 Echoes backend server running on port ${PORT}`);
   console.log(`📡 Socket.IO server ready for connections`);
   console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+  console.log(`📋 Allowed origins: ${allowedOrigins.join(', ')}`);
 }); 
