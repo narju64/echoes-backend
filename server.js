@@ -65,6 +65,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Echoes backend is running' });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Echoes Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      rooms: '/api/rooms',
+      matches: '/api/matches'
+    }
+  });
+});
+
 // Room management API
 app.get('/api/rooms', (req, res) => {
   const availableRooms = Array.from(rooms.values())
