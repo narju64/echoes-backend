@@ -380,6 +380,7 @@ app.get('/api/matches', async (req, res) => {
           winner: parsedData.winner,
           winCondition: parsedData.winCondition,
           eventCount: parsedData.events ? parsedData.events.length : 0,
+          turnCount: parsedData.finalState?.turnNumber || 0,
           loggedAt: parsedData.loggedAt
         });
       } catch (error) {
