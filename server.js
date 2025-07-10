@@ -347,6 +347,65 @@ app.get('/api/matches', async (req, res) => {
   }
 });
 
+// Download all matches as individual files
+app.get('/api/matches/download', async (req, res) => {
+  try {
+    const matchesDir = path.join(__dirname, 'matches');
+    
+    try {
+      await fs.access(matchesDir);
+    } catch (error) {
+      return res.status(404).json({ error: 'No matches directory found' });
+    }
+    
+    const files = await fs.readdir(matchesDir);
+    const matchFiles = files.filter(file => file.endsWith('.json'));
+    
+    if (matchFiles.length === 0) {
+      return res.status(404).json({ error: 'No match files found' });
+    }
+    
+    // Create a simple text file with all match data
+    let allMatchesData = `Echoes Match Data Export\nGenerated: ${new Date().toISOString()}\nTotal Matches: ${matchFiles.length}\n\n`;
+    
+    for (const file of matchFiles) {
+      try {
+        const filepath = path.join(matchesDir, file);
+        const matchData = await fs.readFile(filepath, 'utf8');
+        const parsedData = JSON.parse(matchData);
+        
+        allMatchesData += `=== ${file} ===\n`;
+        allMatchesData += `Match ID: ${parsedData.matchId}\n`;
+        allMatchesData += `Start Time: ${new Date(parsedData.startTime).toISOString()}\n`;
+        allMatchesData += `Duration: ${parsedData.duration}ms\n`;
+        allMatchesData += `Players: ${parsedData.players.join(', ')}\n`;
+        allMatchesData += `Winner: ${parsedData.winner || 'N/A'}\n`;
+        allMatchesData += `Events: ${parsedData.events ? parsedData.events.length : 0}\n\n`;
+      } catch (error) {
+        console.error(`Error reading match file ${file}:`, error);
+        allMatchesData += `=== ${file} ===\nError reading file\n\n`;
+      }
+    }
+    
+    // Set headers for file download
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader('Content-Disposition', `attachment; filename="echoes-matches-summary-${Date.now()}.txt"`);
+    
+    // Send the data
+    res.send(allMatchesData);
+    
+    console.log(`📦 Downloaded summary of ${matchFiles.length} match files`);
+    
+  } catch (error) {
+    console.error('❌ Error creating match download:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create match download',
+      message: error.message
+    });
+  }
+});
+
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
