@@ -400,6 +400,22 @@ app.get('/api/matches', async (req, res) => {
         const matchData = await fs.readFile(filepath, 'utf8');
         const parsedData = JSON.parse(matchData);
         
+        // Extract player names from the match data
+        let playerNames = parsedData.playerNames;
+        
+        // If playerNames is not available, try to extract from match_start event
+        if (!playerNames && parsedData.events && parsedData.events.length > 0) {
+          const matchStartEvent = parsedData.events.find(event => event.type === 'match_start');
+          if (matchStartEvent && matchStartEvent.data && matchStartEvent.data.playerNames) {
+            playerNames = matchStartEvent.data.playerNames;
+          }
+        }
+        
+        // Fallback to players array if no playerNames found
+        if (!playerNames) {
+          playerNames = parsedData.players;
+        }
+        
         // Return summary data only
         matches.push({
           matchId: parsedData.matchId,
@@ -407,7 +423,7 @@ app.get('/api/matches', async (req, res) => {
           endTime: parsedData.endTime,
           duration: parsedData.duration,
           players: parsedData.players,
-          playerNames: parsedData.playerNames || parsedData.players, // Use playerNames if available, fallback to players
+          playerNames: playerNames, // Use extracted playerNames
           gameMode: parsedData.gameMode,
           winner: parsedData.winner,
           winCondition: parsedData.winCondition,
