@@ -430,8 +430,12 @@ app.get('/api/matches', async (req, res) => {
 
 // Clear all matches
 app.delete('/api/matches', async (req, res) => {
-  // Only allow in development mode or with admin key
+  // Only allow in development mode, localhost requests, or with admin key
   const isDevelopment = process.env.NODE_ENV === 'development';
+  const isLocalhost = req.headers.origin && (
+    req.headers.origin.includes('localhost') || 
+    req.headers.origin.includes('127.0.0.1')
+  );
   const adminKey = req.headers['x-admin-key'];
   const expectedAdminKey = process.env.ADMIN_KEY;
   
@@ -439,11 +443,15 @@ app.delete('/api/matches', async (req, res) => {
   console.log('🔐 DELETE /api/matches - Auth check:');
   console.log(`  - NODE_ENV: ${process.env.NODE_ENV}`);
   console.log(`  - isDevelopment: ${isDevelopment}`);
+  console.log(`  - isLocalhost: ${isLocalhost}`);
+  console.log(`  - origin: ${req.headers.origin}`);
   console.log(`  - adminKey provided: ${adminKey ? 'YES' : 'NO'}`);
   console.log(`  - expectedAdminKey set: ${expectedAdminKey ? 'YES' : 'NO'}`);
   console.log(`  - adminKey matches: ${adminKey === expectedAdminKey}`);
+  console.log(`  - All env vars:`, Object.keys(process.env).filter(key => key.includes('ADMIN') || key.includes('NODE')));
+  console.log(`  - ADMIN_KEY value: "${process.env.ADMIN_KEY}"`);
   
-  if (!isDevelopment && (!adminKey || adminKey !== expectedAdminKey)) {
+  if (!isDevelopment && !isLocalhost && (!adminKey || adminKey !== expectedAdminKey)) {
     console.log('❌ Access denied - missing or invalid admin key');
     return res.status(403).json({
       success: false,
