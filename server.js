@@ -435,12 +435,23 @@ app.delete('/api/matches', async (req, res) => {
   const adminKey = req.headers['x-admin-key'];
   const expectedAdminKey = process.env.ADMIN_KEY;
   
+  // Debug logging
+  console.log('🔐 DELETE /api/matches - Auth check:');
+  console.log(`  - NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`  - isDevelopment: ${isDevelopment}`);
+  console.log(`  - adminKey provided: ${adminKey ? 'YES' : 'NO'}`);
+  console.log(`  - expectedAdminKey set: ${expectedAdminKey ? 'YES' : 'NO'}`);
+  console.log(`  - adminKey matches: ${adminKey === expectedAdminKey}`);
+  
   if (!isDevelopment && (!adminKey || adminKey !== expectedAdminKey)) {
+    console.log('❌ Access denied - missing or invalid admin key');
     return res.status(403).json({
       success: false,
       error: 'Access denied. This endpoint is only available in development mode or with proper authorization.'
     });
   }
+  
+  console.log('✅ Access granted - proceeding with match deletion');
   
   try {
     const matchesDir = path.join(__dirname, 'matches');
