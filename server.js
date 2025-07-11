@@ -234,9 +234,20 @@ app.post('/api/matches', async (req, res) => {
       // File doesn't exist, which is expected
     }
     
+    // Extract player names from the match data
+    let playerNames = matchData.players;
+    
+    // If players is an array of objects with names, extract the names
+    if (Array.isArray(matchData.players) && matchData.players.length > 0) {
+      if (typeof matchData.players[0] === 'object' && matchData.players[0].name) {
+        playerNames = matchData.players.map(player => player.name);
+      }
+    }
+    
     // Add server timestamp for when the match was logged
     const matchDataWithTimestamp = {
       ...matchData,
+      playerNames: playerNames, // Store the actual player names
       loggedAt: Date.now(),
       serverVersion: '1.0.0' // For future compatibility
     };
@@ -246,7 +257,7 @@ app.post('/api/matches', async (req, res) => {
     
     console.log(`✅ Match logged successfully: ${filename}`);
     console.log(`   - Duration: ${matchData.duration || 'N/A'}ms`);
-    console.log(`   - Players: ${matchData.players.join(', ')}`);
+    console.log(`   - Players: ${playerNames.join(', ')}`);
     console.log(`   - Events: ${matchData.events.length}`);
     console.log(`   - Winner: ${matchData.winner || 'N/A'}`);
     
@@ -396,6 +407,7 @@ app.get('/api/matches', async (req, res) => {
           endTime: parsedData.endTime,
           duration: parsedData.duration,
           players: parsedData.players,
+          playerNames: parsedData.playerNames || parsedData.players, // Use playerNames if available, fallback to players
           gameMode: parsedData.gameMode,
           winner: parsedData.winner,
           winCondition: parsedData.winCondition,
