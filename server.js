@@ -428,6 +428,76 @@ app.get('/api/matches', async (req, res) => {
   }
 });
 
+// Clear all matches
+app.delete('/api/matches', async (req, res) => {
+  // Only allow in development mode or with admin key
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const adminKey = req.headers['x-admin-key'];
+  const expectedAdminKey = process.env.ADMIN_KEY;
+  
+  if (!isDevelopment && (!adminKey || adminKey !== expectedAdminKey)) {
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied. This endpoint is only available in development mode or with proper authorization.'
+    });
+  }
+  
+  try {
+    const matchesDir = path.join(__dirname, 'matches');
+    
+    try {
+      await fs.access(matchesDir);
+    } catch (error) {
+      // Matches directory doesn't exist, return success
+      return res.json({
+        success: true,
+        message: 'No matches directory found - nothing to clear',
+        deletedCount: 0
+      });
+    }
+    
+    const files = await fs.readdir(matchesDir);
+    const matchFiles = files.filter(file => file.endsWith('.json'));
+    
+    if (matchFiles.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No match files found to clear',
+        deletedCount: 0
+      });
+    }
+    
+    let deletedCount = 0;
+    for (const file of matchFiles) {
+      try {
+        const filepath = path.join(matchesDir, file);
+        await fs.unlink(filepath);
+        deletedCount++;
+        console.log(`🗑️ Deleted match file: ${file}`);
+      } catch (error) {
+        console.error(`Error deleting match file ${file}:`, error);
+        // Continue with other files
+      }
+    }
+    
+    console.log(`🗑️ Cleared ${deletedCount} match files`);
+    
+    res.json({
+      success: true,
+      message: `Successfully cleared ${deletedCount} match files`,
+      deletedCount
+    });
+    
+  } catch (error) {
+    console.error('❌ Error clearing matches:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to clear matches',
+      message: error.message
+    });
+  }
+});
+
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
