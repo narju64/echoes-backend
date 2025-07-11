@@ -401,19 +401,35 @@ app.get('/api/matches', async (req, res) => {
         const parsedData = JSON.parse(matchData);
         
         // Extract player names from the match data
-        let playerNames = parsedData.playerNames;
+        let playerNames = null;
         
-        // If playerNames is not available, try to extract from match_start event
-        if (!playerNames && parsedData.events && parsedData.events.length > 0) {
+        // First priority: extract from match_start event (has actual names)
+        if (parsedData.events && parsedData.events.length > 0) {
           const matchStartEvent = parsedData.events.find(event => event.type === 'match_start');
           if (matchStartEvent && matchStartEvent.data && matchStartEvent.data.playerNames) {
             playerNames = matchStartEvent.data.playerNames;
           }
         }
         
-        // Fallback to players array if no playerNames found
+        // Second priority: use top-level playerNames if it's an object
+        if (!playerNames && parsedData.playerNames && !Array.isArray(parsedData.playerNames)) {
+          playerNames = parsedData.playerNames;
+        }
+        
+        // Third priority: convert top-level array to object
+        if (!playerNames && Array.isArray(parsedData.playerNames)) {
+          playerNames = {
+            player1: parsedData.playerNames[0] || "player1",
+            player2: parsedData.playerNames[1] || "player2"
+          };
+        }
+        
+        // Final fallback: use players array
         if (!playerNames) {
-          playerNames = parsedData.players;
+          playerNames = {
+            player1: parsedData.players[0] || "player1",
+            player2: parsedData.players[1] || "player2"
+          };
         }
         
         // Return summary data only

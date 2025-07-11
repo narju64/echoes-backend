@@ -1,0 +1,1612 @@
+{
+  "matchId": "match_1752241782457_lhoxoxwyd",
+  "startTime": 1752241782457,
+  "gameMode": "multiplayer",
+  "players": [
+    "player1",
+    "player2"
+  ],
+  "playerNames": [
+    "player1",
+    "player2"
+  ],
+  "events": [
+    {
+      "timestamp": 1752241782457,
+      "type": "match_start",
+      "data": {
+        "matchId": "match_1752241782457_lhoxoxwyd",
+        "gameMode": "multiplayer",
+        "players": [
+          "player1",
+          "player2"
+        ],
+        "playerNames": {
+          "player1": "poopman",
+          "player2": "narju"
+        },
+        "initialState": {
+          "board": [
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          ],
+          "echoes": [],
+          "phase": "input",
+          "currentTick": 0,
+          "turnNumber": 1,
+          "scores": {
+            "player1": 0,
+            "player2": 0
+          },
+          "currentPlayer": "player1",
+          "pendingEcho": null,
+          "submittedPlayers": [],
+          "turnHistory": []
+        }
+      }
+    },
+    {
+      "timestamp": 1752241785881,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "jigqbnhe9",
+        "action": "fire",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 2
+      }
+    },
+    {
+      "timestamp": 1752241787637,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "jigqbnhe9",
+        "action": "walk",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 1
+      }
+    },
+    {
+      "timestamp": 1752241789719,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "jigqbnhe9",
+        "action": "walk",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 1
+      }
+    },
+    {
+      "timestamp": 1752241791033,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "jigqbnhe9",
+        "action": "walk",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 1
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_start",
+      "data": {
+        "tick": 0,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_start",
+      "data": {
+        "tick": 1,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_end",
+      "data": {
+        "tick": 1,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_start",
+      "data": {
+        "tick": 2,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_end",
+      "data": {
+        "tick": 2,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_start",
+      "data": {
+        "tick": 3,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_end",
+      "data": {
+        "tick": 3,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_start",
+      "data": {
+        "tick": 4,
+        "echoCount": 0,
+        "aliveEchoes": 0,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "collision",
+      "data": {
+        "entity1": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "entity2": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "position": {
+          "row": 3,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "collision",
+      "data": {
+        "entity1": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "entity2": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "position": {
+          "row": 3,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "entity_destroyed",
+      "data": {
+        "entity": {
+          "id": "jigqbnhe9"
+        },
+        "reason": "collision",
+        "position": {
+          "row": 0,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "entity_destroyed",
+      "data": {
+        "entity": {
+          "id": "du5wcxhvn"
+        },
+        "reason": "collision",
+        "position": {
+          "row": 7,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241799804,
+      "type": "tick_end",
+      "data": {
+        "tick": 4,
+        "echoCount": 0,
+        "aliveEchoes": 0,
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241812490,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "c6zjxmsug",
+        "action": "fire",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 2
+      }
+    },
+    {
+      "timestamp": 1752241814318,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "c6zjxmsug",
+        "action": "fire",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 2
+      }
+    },
+    {
+      "timestamp": 1752241816034,
+      "type": "action",
+      "data": {
+        "player": "player1",
+        "echoId": "c6zjxmsug",
+        "action": "walk",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "direction": {
+          "x": 0,
+          "y": 1
+        },
+        "cost": 1
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_start",
+      "data": {
+        "tick": 0,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_start",
+      "data": {
+        "tick": 1,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_end",
+      "data": {
+        "tick": 1,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_start",
+      "data": {
+        "tick": 2,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_end",
+      "data": {
+        "tick": 2,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_start",
+      "data": {
+        "tick": 3,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_end",
+      "data": {
+        "tick": 3,
+        "echoCount": 2,
+        "aliveEchoes": 2,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_start",
+      "data": {
+        "tick": 4,
+        "echoCount": 1,
+        "aliveEchoes": 1,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "collision",
+      "data": {
+        "entity1": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "entity2": {
+          "id": "collision",
+          "type": "collision",
+          "player": "unknown"
+        },
+        "position": {
+          "row": 3,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "entity_destroyed",
+      "data": {
+        "entity": {
+          "id": "u6b8rl3qc"
+        },
+        "reason": "collision",
+        "position": {
+          "row": 7,
+          "col": 0
+        }
+      }
+    },
+    {
+      "timestamp": 1752241829765,
+      "type": "tick_end",
+      "data": {
+        "tick": 4,
+        "echoCount": 1,
+        "aliveEchoes": 1,
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        }
+      }
+    },
+    {
+      "timestamp": 1752241832700,
+      "type": "match_end",
+      "data": {
+        "winner": "player1",
+        "winCondition": "opponent_destroyed",
+        "finalScore": {
+          "player1": 2,
+          "player2": 1
+        },
+        "finalState": {
+          "board": [
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          ],
+          "echoes": [
+            {
+              "id": "c6zjxmsug",
+              "playerId": "player1",
+              "position": {
+                "row": 0,
+                "col": 0
+              },
+              "startingPosition": {
+                "row": 0,
+                "col": 0
+              },
+              "instructionList": [
+                {
+                  "type": "fire",
+                  "direction": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "tick": 1,
+                  "cost": 2
+                },
+                {
+                  "type": "fire",
+                  "direction": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "tick": 2,
+                  "cost": 2
+                },
+                {
+                  "type": "walk",
+                  "direction": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "tick": 3,
+                  "cost": 1
+                }
+              ],
+              "isShielded": false,
+              "actionPoints": 5,
+              "alive": true
+            }
+          ],
+          "phase": "gameOver",
+          "currentTick": 0,
+          "turnNumber": 3,
+          "scores": {
+            "player1": 2,
+            "player2": 1
+          },
+          "currentPlayer": "player1",
+          "pendingEcho": null,
+          "submittedPlayers": [],
+          "turnHistory": [
+            {
+              "turnNumber": 1,
+              "player1Echoes": [
+                {
+                  "id": "jigqbnhe9",
+                  "playerId": "player1",
+                  "position": {
+                    "row": 0,
+                    "col": 0
+                  },
+                  "startingPosition": {
+                    "row": 0,
+                    "col": 0
+                  },
+                  "instructionList": [
+                    {
+                      "type": "fire",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 1,
+                      "cost": 2
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 2,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 3,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 4,
+                      "cost": 1
+                    }
+                  ],
+                  "isShielded": false,
+                  "actionPoints": 5,
+                  "alive": true
+                }
+              ],
+              "player2Echoes": [
+                {
+                  "id": "du5wcxhvn",
+                  "playerId": "player2",
+                  "position": {
+                    "row": 7,
+                    "col": 0
+                  },
+                  "startingPosition": {
+                    "row": 7,
+                    "col": 0
+                  },
+                  "instructionList": [
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 1,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 2,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 3,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 4,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 5,
+                      "cost": 1
+                    }
+                  ],
+                  "isShielded": false,
+                  "actionPoints": 5,
+                  "alive": true
+                }
+              ],
+              "scores": {
+                "player1": 0,
+                "player2": 0
+              },
+              "destroyedEchoes": [
+                {
+                  "echoId": "jigqbnhe9",
+                  "by": "player2",
+                  "position": {
+                    "row": 3,
+                    "col": 0
+                  },
+                  "playerId": "player1"
+                },
+                {
+                  "echoId": "du5wcxhvn",
+                  "by": "player1",
+                  "position": {
+                    "row": 3,
+                    "col": 0
+                  },
+                  "playerId": "player2"
+                }
+              ],
+              "destroyedProjectiles": [],
+              "collisions": [
+                {
+                  "row": 3,
+                  "col": 0
+                },
+                {
+                  "row": 3,
+                  "col": 0
+                }
+              ],
+              "shieldBlocks": [],
+              "eventLog": [
+                "Tick 4 - 1 Blue and 1 Orange echos destroyed at A5"
+              ]
+            },
+            {
+              "turnNumber": 2,
+              "player1Echoes": [
+                {
+                  "id": "c6zjxmsug",
+                  "playerId": "player1",
+                  "position": {
+                    "row": 0,
+                    "col": 0
+                  },
+                  "startingPosition": {
+                    "row": 0,
+                    "col": 0
+                  },
+                  "instructionList": [
+                    {
+                      "type": "fire",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 1,
+                      "cost": 2
+                    },
+                    {
+                      "type": "fire",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 2,
+                      "cost": 2
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": 1
+                      },
+                      "tick": 3,
+                      "cost": 1
+                    }
+                  ],
+                  "isShielded": false,
+                  "actionPoints": 5,
+                  "alive": true
+                }
+              ],
+              "player2Echoes": [
+                {
+                  "id": "u6b8rl3qc",
+                  "playerId": "player2",
+                  "position": {
+                    "row": 7,
+                    "col": 0
+                  },
+                  "startingPosition": {
+                    "row": 7,
+                    "col": 0
+                  },
+                  "instructionList": [
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 1,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 2,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 3,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 4,
+                      "cost": 1
+                    },
+                    {
+                      "type": "walk",
+                      "direction": {
+                        "x": 0,
+                        "y": -1
+                      },
+                      "tick": 5,
+                      "cost": 1
+                    }
+                  ],
+                  "isShielded": false,
+                  "actionPoints": 5,
+                  "alive": true
+                }
+              ],
+              "scores": {
+                "player1": 1,
+                "player2": 1
+              },
+              "destroyedEchoes": [
+                {
+                  "echoId": "u6b8rl3qc",
+                  "by": "player1",
+                  "position": {
+                    "row": 3,
+                    "col": 0
+                  },
+                  "playerId": "player2"
+                }
+              ],
+              "destroyedProjectiles": [
+                {
+                  "id": "p2",
+                  "type": "projectile",
+                  "position": {
+                    "row": 3,
+                    "col": 0
+                  }
+                }
+              ],
+              "collisions": [
+                {
+                  "row": 3,
+                  "col": 0
+                }
+              ],
+              "shieldBlocks": [],
+              "eventLog": [
+                "Tick 4 - 1 Blue echo destroyed by projectile at A5"
+              ]
+            }
+          ],
+          "winner": "player1"
+        },
+        "duration": 50243
+      }
+    }
+  ],
+  "initialState": {
+    "board": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ],
+    "echoes": [],
+    "phase": "input",
+    "currentTick": 0,
+    "turnNumber": 1,
+    "scores": {
+      "player1": 0,
+      "player2": 0
+    },
+    "currentPlayer": "player1",
+    "pendingEcho": null,
+    "submittedPlayers": [],
+    "turnHistory": []
+  },
+  "endTime": 1752241832700,
+  "winner": "player1",
+  "winCondition": "opponent_destroyed",
+  "finalScore": {
+    "player1": 2,
+    "player2": 1
+  },
+  "finalState": {
+    "board": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ],
+    "echoes": [
+      {
+        "id": "c6zjxmsug",
+        "playerId": "player1",
+        "position": {
+          "row": 0,
+          "col": 0
+        },
+        "startingPosition": {
+          "row": 0,
+          "col": 0
+        },
+        "instructionList": [
+          {
+            "type": "fire",
+            "direction": {
+              "x": 0,
+              "y": 1
+            },
+            "tick": 1,
+            "cost": 2
+          },
+          {
+            "type": "fire",
+            "direction": {
+              "x": 0,
+              "y": 1
+            },
+            "tick": 2,
+            "cost": 2
+          },
+          {
+            "type": "walk",
+            "direction": {
+              "x": 0,
+              "y": 1
+            },
+            "tick": 3,
+            "cost": 1
+          }
+        ],
+        "isShielded": false,
+        "actionPoints": 5,
+        "alive": true
+      }
+    ],
+    "phase": "gameOver",
+    "currentTick": 0,
+    "turnNumber": 3,
+    "scores": {
+      "player1": 2,
+      "player2": 1
+    },
+    "currentPlayer": "player1",
+    "pendingEcho": null,
+    "submittedPlayers": [],
+    "turnHistory": [
+      {
+        "turnNumber": 1,
+        "player1Echoes": [
+          {
+            "id": "jigqbnhe9",
+            "playerId": "player1",
+            "position": {
+              "row": 0,
+              "col": 0
+            },
+            "startingPosition": {
+              "row": 0,
+              "col": 0
+            },
+            "instructionList": [
+              {
+                "type": "fire",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 1,
+                "cost": 2
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 2,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 3,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 4,
+                "cost": 1
+              }
+            ],
+            "isShielded": false,
+            "actionPoints": 5,
+            "alive": true
+          }
+        ],
+        "player2Echoes": [
+          {
+            "id": "du5wcxhvn",
+            "playerId": "player2",
+            "position": {
+              "row": 7,
+              "col": 0
+            },
+            "startingPosition": {
+              "row": 7,
+              "col": 0
+            },
+            "instructionList": [
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 1,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 2,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 3,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 4,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 5,
+                "cost": 1
+              }
+            ],
+            "isShielded": false,
+            "actionPoints": 5,
+            "alive": true
+          }
+        ],
+        "scores": {
+          "player1": 0,
+          "player2": 0
+        },
+        "destroyedEchoes": [
+          {
+            "echoId": "jigqbnhe9",
+            "by": "player2",
+            "position": {
+              "row": 3,
+              "col": 0
+            },
+            "playerId": "player1"
+          },
+          {
+            "echoId": "du5wcxhvn",
+            "by": "player1",
+            "position": {
+              "row": 3,
+              "col": 0
+            },
+            "playerId": "player2"
+          }
+        ],
+        "destroyedProjectiles": [],
+        "collisions": [
+          {
+            "row": 3,
+            "col": 0
+          },
+          {
+            "row": 3,
+            "col": 0
+          }
+        ],
+        "shieldBlocks": [],
+        "eventLog": [
+          "Tick 4 - 1 Blue and 1 Orange echos destroyed at A5"
+        ]
+      },
+      {
+        "turnNumber": 2,
+        "player1Echoes": [
+          {
+            "id": "c6zjxmsug",
+            "playerId": "player1",
+            "position": {
+              "row": 0,
+              "col": 0
+            },
+            "startingPosition": {
+              "row": 0,
+              "col": 0
+            },
+            "instructionList": [
+              {
+                "type": "fire",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 1,
+                "cost": 2
+              },
+              {
+                "type": "fire",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 2,
+                "cost": 2
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": 1
+                },
+                "tick": 3,
+                "cost": 1
+              }
+            ],
+            "isShielded": false,
+            "actionPoints": 5,
+            "alive": true
+          }
+        ],
+        "player2Echoes": [
+          {
+            "id": "u6b8rl3qc",
+            "playerId": "player2",
+            "position": {
+              "row": 7,
+              "col": 0
+            },
+            "startingPosition": {
+              "row": 7,
+              "col": 0
+            },
+            "instructionList": [
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 1,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 2,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 3,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 4,
+                "cost": 1
+              },
+              {
+                "type": "walk",
+                "direction": {
+                  "x": 0,
+                  "y": -1
+                },
+                "tick": 5,
+                "cost": 1
+              }
+            ],
+            "isShielded": false,
+            "actionPoints": 5,
+            "alive": true
+          }
+        ],
+        "scores": {
+          "player1": 1,
+          "player2": 1
+        },
+        "destroyedEchoes": [
+          {
+            "echoId": "u6b8rl3qc",
+            "by": "player1",
+            "position": {
+              "row": 3,
+              "col": 0
+            },
+            "playerId": "player2"
+          }
+        ],
+        "destroyedProjectiles": [
+          {
+            "id": "p2",
+            "type": "projectile",
+            "position": {
+              "row": 3,
+              "col": 0
+            }
+          }
+        ],
+        "collisions": [
+          {
+            "row": 3,
+            "col": 0
+          }
+        ],
+        "shieldBlocks": [],
+        "eventLog": [
+          "Tick 4 - 1 Blue echo destroyed by projectile at A5"
+        ]
+      }
+    ],
+    "winner": "player1"
+  },
+  "duration": 50243,
+  "loggedAt": 1752241832706,
+  "serverVersion": "1.0.0"
+}
